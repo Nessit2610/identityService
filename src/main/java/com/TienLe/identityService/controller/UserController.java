@@ -43,21 +43,25 @@ public class UserController {
 	}
 	
 	@GetMapping("/users")
-	public List<User> GetAllUser() {
+	public List<UserResponse> GetAllUser() {
 		var authenticate = SecurityContextHolder.getContext().getAuthentication();
-		
-		log.info("username : {}", authenticate.getName());
-		authenticate.getAuthorities().forEach(g -> log.info("role : {}",g.getAuthority()));
 		return userService.GetAllUser();
 	}
 	
 	@GetMapping("/users/{userId}")
-	public User GetUser(@PathVariable("userId") String id) {
+	public UserResponse GetUser(@PathVariable("userId") String id) {
 		return userService.GetUserById(id);
 	}
 	
+	@GetMapping("/myinfo")
+	public APIResponse<UserResponse> GetMyInfo() {
+		return APIResponse.<UserResponse>builder()
+				.result(userService.getMyInfo())
+				.build(); 
+	}
+	
 	@PutMapping("/users/{userId}")
-	public User UpdateUser(@PathVariable("userId") String id ,@RequestBody UserUpdateRequest updateRequest) {
+	public UserResponse UpdateUser(@PathVariable("userId") String id ,@RequestBody UserUpdateRequest updateRequest) {
 		return userService.UpdateUser(id, updateRequest) ;
 	}
 	

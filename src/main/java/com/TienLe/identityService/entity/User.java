@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,7 +29,8 @@ public class User {
 	private String lastName;
 	private LocalDate dob;
 	
-	private Set<String> roles;
+	@ManyToMany
+	private Set<Role> roles;
 	
 	
 }

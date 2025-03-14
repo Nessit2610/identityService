@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 
 @RestController
-@Slf4j
 public class UserController {
 	
 	@Autowired

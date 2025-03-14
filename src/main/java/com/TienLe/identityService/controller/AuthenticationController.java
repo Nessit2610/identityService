@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.TienLe.identityService.dto.request.APIResponse;
 import com.TienLe.identityService.dto.request.AuthenticationRequest;
 import com.TienLe.identityService.dto.request.IntrospectRequest;
+import com.TienLe.identityService.dto.request.LogoutRequest;
+import com.TienLe.identityService.dto.request.RefreshRequest;
 import com.TienLe.identityService.dto.response.AuthenticationResponse;
 import com.TienLe.identityService.dto.response.IntrospectResponse;
 import com.TienLe.identityService.service.AuthenticationService;
@@ -40,5 +42,19 @@ public class AuthenticationController {
 				.result(result)
 				.build();
 	}	
+	
+	@PostMapping("/logout")
+	public APIResponse<Void> logout(@RequestBody LogoutRequest request) throws JOSEException, ParseException {
+		authenticationService.logout(request);
+		return APIResponse.<Void>builder().build();
+	}
+	
+	@PostMapping("/refresh")
+	public APIResponse<AuthenticationResponse> refresh(@RequestBody RefreshRequest request) throws JOSEException, ParseException{
+		var result = authenticationService.refreshToken(request);
+		return APIResponse.<AuthenticationResponse>builder()
+				.result(result)
+				.build();
+	}
 	
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.TienLe.identityService.dto.request.APIResponse;
@@ -30,6 +31,13 @@ public class RoleController {
 	public APIResponse<RoleResponse> create(@RequestBody RoleRequest request){
 		return APIResponse.<RoleResponse>builder()
 				.result(roleService.create(request))
+				.build();
+	}
+	
+	@PostMapping("/update")
+	public APIResponse<RoleResponse> update(@RequestBody RoleRequest request){
+		return APIResponse.<RoleResponse>builder()
+				.result(roleService.updatePermissionsForRole(request))
 				.build();
 	}
 	

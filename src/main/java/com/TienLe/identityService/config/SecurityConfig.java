@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.crypto.spec.SecretKeySpec;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,10 +27,10 @@ import com.TienLe.identityService.enums.Roles;
 @EnableWebSecurity
 public class SecurityConfig {
 
-	private final String[] PUBPIC_API = {"/users","/auth/token","/auth/introspect"};
-	
-	@Value("${jwt.signerkey}")
-	private String key;
+	private final String[] PUBPIC_API = {"/users","/auth/token","/auth/introspect","/auth/logout","/auth/refresh"};
+
+	@Autowired
+	private CustomJwtDecoder customJwtDecoder;
 	
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -40,7 +41,7 @@ public class SecurityConfig {
     				.anyRequest().authenticated());
     	
     	httpSecurity.oauth2ResourceServer( oauth2configure -> 
-    		oauth2configure.jwt(jwtconfigure -> jwtconfigure.decoder(jwtDecoder())
+    		oauth2configure.jwt(jwtconfigure -> jwtconfigure.decoder(customJwtDecoder)
     											.jwtAuthenticationConverter(jwtAuthenticationConverter())
     				)
     			);
@@ -65,16 +66,6 @@ public class SecurityConfig {
     	JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
     	jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
     	return jwtAuthenticationConverter;
-    }
-    
-    
-    @Bean
-    public JwtDecoder jwtDecoder() {
-    	
-    	SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(), "HS512");
-    	return NimbusJwtDecoder.withSecretKey(secretKeySpec)
-    							.macAlgorithm(MacAlgorithm.HS512)
-    							.build();
     }
     
     @Bean

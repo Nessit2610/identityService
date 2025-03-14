@@ -1,6 +1,9 @@
 package com.TienLe.identityService.dto.request;
 
 import java.time.LocalDate;
+
+import com.TienLe.identityService.validator.DobConstraint;
+
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -23,6 +26,8 @@ public class UserCreationRequest {
 	
 	private String firstName;
 	private String lastName;
+	
+	@DobConstraint(min = 18, message = "DOB_INVALID")
 	private LocalDate dob;
 	
 	

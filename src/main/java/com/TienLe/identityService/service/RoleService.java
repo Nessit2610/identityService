@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.TienLe.identityService.dto.request.APIResponse;
 import com.TienLe.identityService.dto.request.RoleRequest;
 import com.TienLe.identityService.dto.response.RoleResponse;
+import com.TienLe.identityService.exception.AppException;
+import com.TienLe.identityService.exception.ErrorCode;
 import com.TienLe.identityService.mapper.RoleMapper;
 import com.TienLe.identityService.repository.PermissionRepository;
 import com.TienLe.identityService.repository.RoleRepository;
@@ -48,9 +50,13 @@ public class RoleService {
 		roleRepository.deleteById(roleName);
 	}
 	
-	
-	
-	
-	
+	public RoleResponse updatePermissionsForRole(RoleRequest request) {
+	    var role = roleRepository.findById( request.getName())
+	            .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+	    var permissions = permissionRepository.findAllById(request.getPermissions());
+	    role.setPermissions(new HashSet<>(permissions));
+	    role = roleRepository.save(role);
+	    return roleMapper.toRoleResponse(role);
+	}	
 
 }
